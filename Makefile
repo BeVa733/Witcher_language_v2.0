@@ -1,7 +1,7 @@
 CXX = g++
 INCLUDES = -I./frontend/include -I./tree/include -I./include -I./backend/include -I./reverse/include -I./middleend/include
 
-CXXFLAGS = -Wall -g -Wextra -Wshadow $(INCLUDES)
+CXXFLAGS = -Wall -g -DNDEBUG -Wextra -Wshadow $(INCLUDES)
 
 FRONT_DIR = frontend/src
 BACK_DIR = backend/src
@@ -11,7 +11,7 @@ MIDDLE_DIR = middleend/src
 OBJDIR = obj
 
 FRONT_SRCS = $(FRONT_DIR)/frontend_lex.cpp $(FRONT_DIR)/frontend_parse.cpp $(FRONT_DIR)/frontend_main.cpp $(TREE_DIR)/tree.cpp
-BACK_SRCS = $(BACK_DIR)/backend_codegen.cpp $(BACK_DIR)/backend_emit.cpp $(BACK_DIR)/backend_main.cpp $(BACK_DIR)/program_symbols.cpp $(TREE_DIR)/tree_io.cpp $(TREE_DIR)/tree.cpp
+BACK_SRCS = $(BACK_DIR)/exec_codegen.cpp $(BACK_DIR)/exec_emit.cpp $(BACK_DIR)/exec_backend_main.cpp $(BACK_DIR)/program_symbols.cpp $(TREE_DIR)/tree_io.cpp $(TREE_DIR)/tree.cpp
 REVERSE_SRC = $(REVERSE_DIR)/reverse_end.cpp $(REVERSE_DIR)/reverse_end_main.cpp $(TREE_DIR)/tree.cpp $(TREE_DIR)/tree_io.cpp
 MIDDLE_SRCS = $(MIDDLE_DIR)/middle_end_main.cpp $(MIDDLE_DIR)/middle_end.cpp $(TREE_DIR)/tree.cpp $(TREE_DIR)/tree_io.cpp
 
