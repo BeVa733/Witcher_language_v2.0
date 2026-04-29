@@ -368,9 +368,9 @@ static bool emit_comparison(codegen_state* state, const node_t* expr, const char
     return emit_expression(state, expr->left) &&
            emit_line(state->out, "    push rax") &&
            emit_expression(state, expr->right) &&
-           emit_line(state->out, "    pop rbx") &&
-           emit_line(state->out, "    cmp rbx, rax") &&
-           emit_line(state->out, "    xor eax, eax") &&
+           emit_line(state->out, "    pop r10") &&
+           emit_line(state->out, "    cmp r10, rax") &&
+           emit_line(state->out, "    mov eax, 0") &&
            emit_line(state->out, "    %s al", setcc_mnemonic);
 }
 
@@ -631,23 +631,23 @@ static bool emit_expression(codegen_state* state, const node_t* expr)
             return emit_expression(state, expr->left) &&
                    emit_line(state->out, "    push rax") &&
                    emit_expression(state, expr->right) &&
-                   emit_line(state->out, "    pop rbx") &&
-                   emit_line(state->out, "    add rax, rbx");
+                   emit_line(state->out, "    pop r10") &&
+                   emit_line(state->out, "    add rax, r10");
 
         case OPER_SUB:
             return emit_expression(state, expr->left) &&
                    emit_line(state->out, "    push rax") &&
                    emit_expression(state, expr->right) &&
-                   emit_line(state->out, "    pop rbx") &&
-                   emit_line(state->out, "    sub rbx, rax") &&
-                   emit_line(state->out, "    mov rax, rbx");
+                   emit_line(state->out, "    pop r10") &&
+                   emit_line(state->out, "    sub r10, rax") &&
+                   emit_line(state->out, "    mov rax, r10");
 
         case OPER_MUL:
             return emit_expression(state, expr->left) &&
                    emit_line(state->out, "    push rax") &&
                    emit_expression(state, expr->right) &&
-                   emit_line(state->out, "    pop rbx") &&
-                   emit_line(state->out, "    imul rax, rbx");
+                   emit_line(state->out, "    pop r10") &&
+                   emit_line(state->out, "    imul rax, r10");
 
         case OPER_DIV:
             return emit_expression(state, expr->left) &&
