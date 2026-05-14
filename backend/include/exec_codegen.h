@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 
+#include "exec_emit.h"
 #include "program_symbols.h"
 #include "tree.h"
 
@@ -18,6 +19,7 @@ void exec_result_ctor(exec_result* result);
 bool exec_generate_program(const node_t* program_root,
                            const program_symbols* symbols,
                            FILE* out,
+                           output_format format,
                            exec_result* result);
 
 #endif

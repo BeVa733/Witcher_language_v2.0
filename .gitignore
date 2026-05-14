@@ -5,3 +5,6 @@ obj
 *.bin
 *.vdm
 *.asm
+
+!backend/runtime/runtime_syscalls.bin
+!backend/runtime/runtime_syscalls.asm
