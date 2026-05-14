@@ -11,7 +11,7 @@ INPUT_FILE=$2
 
 TXT_FILE="${INPUT_FILE%.*}.txt"
 ASM_FILE="${INPUT_FILE%.*}.asm"
-BIN_FILE="${INPUT_FILE%.*}.bin"
+BIN_FILE="${INPUT_FILE%.*}.out"
 REVERSE_OUT="${INPUT_FILE%.*}_reversed.vdm"
 
 case "$ACTION" in
@@ -20,9 +20,7 @@ case "$ACTION" in
         ./frontend.out $INPUT_FILE $TXT_FILE
         echo "front" 
         #./middle.out $TXT_FILE $TXT_FILE
-        ./backend.out $TXT_FILE $ASM_FILE
-        nasm -f elf64 $ASM_FILE -o $BIN_FILE
-        ld $BIN_FILE -o prog.out
+        ./backend.out $TXT_FILE $BIN_FILE
         ./prog.out
         ;;
     
