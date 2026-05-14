@@ -65,10 +65,7 @@ static int get_function_index(const program_symbols* symbols, const function_sym
     return -1;
 }
 
-static void get_function_label(const program_symbols* symbols,
-                               const function_symbol* function,
-                               char* label,
-                               size_t label_size)
+static void get_function_label(const program_symbols* symbols, const function_symbol* function, char* label, size_t label_size)
 {
     assert(symbols);
     assert(function);
@@ -351,11 +348,7 @@ static bool emit_call_expression(codegen_state* state, const node_t* expr)
     const int argument_count = count_call_arguments(expr->right);
     if (argument_count != called_function->param_count)
     {
-        codegen_fail(state,
-                     "function '%s' expects %d argument(s), but %d provided",
-                     called_function->name,
-                     called_function->param_count,
-                     argument_count);
+        codegen_fail(state, "function '%s' expects %d argument(s), but %d provided", called_function->name, called_function->param_count, argument_count);
         return false;
     }
 
@@ -382,9 +375,7 @@ static bool emit_comparison(codegen_state* state, const node_t* expr, cond_code 
            emit_setcc_reg(state->emit, condition, REG_RAX);
 }
 
-static bool emit_condition_jump_false(codegen_state* state,
-                                      const node_t* condition,
-                                      int false_label_id)
+static bool emit_condition_jump_false(codegen_state* state, const node_t* condition, int false_label_id)
 {
     assert(state);
 
