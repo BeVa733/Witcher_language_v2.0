@@ -11,46 +11,6 @@ const size_t BUFFER_START_CAPACITY = 256;
 const size_t LABEL_START_CAPACITY  = 64;
 const size_t FIXUP_START_CAPACITY  = 64;
 
-static const emit_ops BIN_OPS =
-{
-    emit_bin_destroy,
-
-    emit_bin_blank_line,
-    emit_bin_comment,
-    emit_bin_label,
-    emit_bin_raw_line,
-    emit_bin_bytes,
-    emit_bin_align,
-
-    emit_bin_mov_reg_imm,
-    emit_bin_mov_reg_reg,
-    emit_bin_mov_reg_rbp_rel,
-    emit_bin_mov_rbp_rel_reg,
-    emit_bin_lea_reg_label,
-
-    emit_bin_push_reg,
-    emit_bin_pop_reg,
-
-    emit_bin_add_reg_imm,
-    emit_bin_sub_reg_imm,
-    emit_bin_bin_reg_reg,
-
-    emit_bin_cmp_reg_reg,
-    emit_bin_test_reg_reg,
-    emit_bin_setcc_reg,
-
-    emit_bin_neg_reg,
-    emit_bin_cqo,
-    emit_bin_idiv_reg,
-
-    emit_bin_call_label,
-    emit_bin_jmp_label,
-    emit_bin_jcc_label,
-
-    emit_bin_ret,
-    emit_bin_syscall,
-};
-
 struct byte_buffer
 {
     unsigned char* data;
@@ -820,6 +780,46 @@ static void emit_bin_destroy(emit_context* emit)
     free(data);
     emit->data = NULL;
 }
+
+static const emit_ops BIN_OPS =
+{
+    emit_bin_destroy,
+
+    emit_bin_blank_line,
+    emit_bin_comment,
+    emit_bin_label,
+    emit_bin_raw_line,
+    emit_bin_bytes,
+    emit_bin_align,
+
+    emit_bin_mov_reg_imm,
+    emit_bin_mov_reg_reg,
+    emit_bin_mov_reg_rbp_rel,
+    emit_bin_mov_rbp_rel_reg,
+    emit_bin_lea_reg_label,
+
+    emit_bin_push_reg,
+    emit_bin_pop_reg,
+
+    emit_bin_add_reg_imm,
+    emit_bin_sub_reg_imm,
+    emit_bin_bin_reg_reg,
+
+    emit_bin_cmp_reg_reg,
+    emit_bin_test_reg_reg,
+    emit_bin_setcc_reg,
+
+    emit_bin_neg_reg,
+    emit_bin_cqo,
+    emit_bin_idiv_reg,
+
+    emit_bin_call_label,
+    emit_bin_jmp_label,
+    emit_bin_jcc_label,
+
+    emit_bin_ret,
+    emit_bin_syscall,
+};
 
 bool emit_context_ctor_bin(emit_context* emit)
 {
