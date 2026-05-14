@@ -20,7 +20,7 @@ BACK_OBJS = $(addprefix $(OBJDIR)/,$(notdir $(BACK_SRCS:.cpp=.o)))
 REVERSE_OBJ = $(addprefix $(OBJDIR)/,$(notdir $(REVERSE_SRC:.cpp=.o)))
 MIDDLE_OBJS = $(addprefix $(OBJDIR)/,$(notdir $(MIDDLE_SRCS:.cpp=.o)))
 
-all: frontend backend 
+all: frontend backend middle_end
 
 frontend: $(FRONT_OBJS)
 	$(CXX) $(CXXFLAGS) $^ -o frontend.out

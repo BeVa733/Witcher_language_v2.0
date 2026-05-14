@@ -18,16 +18,14 @@ case "$ACTION" in
     "run")
         # make > /dev/null
         ./frontend.out $INPUT_FILE $TXT_FILE
-        echo "front" 
-        #./middle.out $TXT_FILE $TXT_FILE
+        ./middle.out $TXT_FILE $TXT_FILE
         ./backend.out $TXT_FILE $BIN_FILE
-        ./prog.out
+        ./$BIN_FILE
         ;;
     
     "compile")
         ./frontend.out $INPUT_FILE $TXT_FILE
-        ./backend.out $TXT_FILE $ASM_FILE
-        ./asm.out $ASM_FILE $BIN_FILE
+        ./backend.out $TXT_FILE $BIN_FILE
         echo -e "compile to $BIN_FILE"
         ;;
 
