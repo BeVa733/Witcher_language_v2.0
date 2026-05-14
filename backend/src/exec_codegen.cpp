@@ -1163,10 +1163,7 @@ static bool emit_function_definitions(codegen_state* state)
         {
             if (state->result->error_text[0] == '\0')
             {
-                snprintf(state->result->error_text,
-                         EXEC_ERROR_TEXT_SIZE,
-                         "failed to emit function '%s'",
-                         state->symbols->functions[index].name);
+                snprintf(state->result->error_text, EXEC_ERROR_TEXT_SIZE, "failed to emit function '%s'", state->symbols->functions[index].name);
             }
 
             return false;
@@ -1176,10 +1173,7 @@ static bool emit_function_definitions(codegen_state* state)
     return true;
 }
 
-static void init_codegen_state(codegen_state* state,
-                               const program_symbols* symbols,
-                               emit_context* emit,
-                               exec_result* result)
+static void init_codegen_state(codegen_state* state, const program_symbols* symbols, emit_context* emit, exec_result* result)
 {
     assert(state);
     assert(symbols);
@@ -1198,9 +1192,7 @@ static void init_codegen_state(codegen_state* state,
     state->text_constant_capacity = 0;
 }
 
-static bool validate_codegen_input(const node_t* program_root,
-                                   const program_symbols* symbols,
-                                   exec_result* result)
+static bool validate_codegen_input(const node_t* program_root, const program_symbols* symbols, exec_result* result)
 {
     assert(symbols);
     assert(result);
@@ -1213,28 +1205,20 @@ static bool validate_codegen_input(const node_t* program_root,
 
     if (symbols->function_count <= 0)
     {
-        snprintf(result->error_text,
-                 EXEC_ERROR_TEXT_SIZE,
-                 "program does not contain any functions");
+        snprintf(result->error_text, EXEC_ERROR_TEXT_SIZE, "program does not contain any functions");
         return false;
     }
 
     if (symbols->entry_index < 0 || symbols->entry_index >= symbols->function_count)
     {
-        snprintf(result->error_text,
-                 EXEC_ERROR_TEXT_SIZE,
-                 "invalid entry function index %d",
-                 symbols->entry_index);
+        snprintf(result->error_text, EXEC_ERROR_TEXT_SIZE, "invalid entry function index %d", symbols->entry_index);
         return false;
     }
 
     return true;
 }
 
-static bool generate_nasm_program(const node_t* program_root,
-                                  const program_symbols* symbols,
-                                  FILE* out,
-                                  exec_result* result)
+static bool generate_nasm_program(const node_t* program_root, const program_symbols* symbols, FILE* out, exec_result* result)
 {
     assert(symbols);
     assert(out);
@@ -1268,10 +1252,7 @@ static bool generate_nasm_program(const node_t* program_root,
     return ok && result->error_text[0] == '\0';
 }
 
-static bool generate_elf_program(const node_t* program_root,
-                                 const program_symbols* symbols,
-                                 FILE* out,
-                                 exec_result* result)
+static bool generate_elf_program(const node_t* program_root, const program_symbols* symbols, FILE* out, exec_result* result)
 {
     assert(symbols);
     assert(out);
@@ -1319,12 +1300,7 @@ static bool generate_elf_program(const node_t* program_root,
         ok = false;
     }
 
-    if (ok && !write_min_elf64(out,
-                               emit_bin_data(&emit),
-                               emit_bin_size(&emit),
-                               entry_offset,
-                               result->error_text,
-                               EXEC_ERROR_TEXT_SIZE))
+    if (ok && !write_min_elf64(out, emit_bin_data(&emit), emit_bin_size(&emit), entry_offset, result->error_text, EXEC_ERROR_TEXT_SIZE))
     {
         ok = false;
     }
@@ -1344,11 +1320,7 @@ void exec_result_ctor(exec_result* result)
     result->error_text[0] = '\0';
 }
 
-bool exec_generate_program(const node_t* program_root,
-                           const program_symbols* symbols,
-                           FILE* out,
-                           output_format format,
-                           exec_result* result)
+bool exec_generate_program(const node_t* program_root, const program_symbols* symbols, FILE* out, output_format format, exec_result* result)
 {
     assert(symbols);
     assert(out);
