@@ -7,6 +7,8 @@
 
 #include "exec_emit.h"
 
+#define OPCODE(x) x
+
 const size_t BUFFER_START_CAPACITY = 256;
 const size_t LABEL_START_CAPACITY  = 64;
 const size_t FIXUP_START_CAPACITY  = 64;
@@ -313,13 +315,13 @@ static bool emit_rex(byte_buffer* code, bool w, reg reg_field, reg rm_field)
 {
     assert(code);
 
-    uint8_t rex = 0x40;
+    uint8_t rex = OPCODE(0x40);
     if (w)
-        rex |= 0x08;
+        rex |= OPCODE(0x08);
     if (high_reg(reg_field))
-        rex |= 0x04;
+        rex |= OPCODE(0x04);
     if (high_reg(rm_field))
-        rex |= 0x01;
+        rex |= OPODE(0x01);
 
     if (rex == 0x40)
         return true;
@@ -331,13 +333,13 @@ static bool emit_rex_force(byte_buffer* code, bool w, reg reg_field, reg rm_fiel
 {
     assert(code);
 
-    uint8_t rex = 0x40;
+    uint8_t rex = OPCODE (0x40);
     if (w)
-        rex |= 0x08;
+        rex |= OPCODE(0x08);
     if (high_reg(reg_field))
-        rex |= 0x04;
+        rex |= OPCODE(0x04);
     if (high_reg(rm_field))
-        rex |= 0x01;
+        rex |= OPCODE(0x01);
 
     return buffer_u8(code, rex);
 }
@@ -505,14 +507,14 @@ static bool emit_bin_mov_reg_imm(emit_context* emit, reg dst, int64_t imm)
 
     byte_buffer* code = &get_bin_data(emit)->code;
     return emit_rex_force(code, true, REG_RAX, dst) &&
-           buffer_u8(code, (uint8_t)(0xB8 + low_reg(dst))) &&
+           buffer_u8(code, (uint8_t)(OPCODE (0xB8) + low_reg(dst))) &&
            buffer_u64(code, (uint64_t)imm);
 }
 
 static bool emit_bin_mov_reg_reg(emit_context* emit, reg dst, reg src)
 {
     assert(emit);
-    return emit_modrm_reg_reg(&get_bin_data(emit)->code, 0x89, dst, src);
+    return emit_modrm_reg_reg(&get_bin_data(emit)->code, OPCODE (0x89), dst, src);
 }
 
 static bool emit_bin_mov_reg_rbp_rel(emit_context* emit, reg dst, int32_t rbp_disp)
@@ -521,7 +523,7 @@ static bool emit_bin_mov_reg_rbp_rel(emit_context* emit, reg dst, int32_t rbp_di
 
     byte_buffer* code = &get_bin_data(emit)->code;
     return emit_rex_force(code, true, dst, REG_RBP) &&
-           buffer_u8(code, 0x8B) &&
+           buffer_u8(code, OPCODE(0x8B)) &&
            emit_rbp_memory_modrm(code, dst, rbp_disp);
 }
 
@@ -564,7 +566,7 @@ static bool emit_bin_push_reg(emit_context* emit, reg src)
     if (high_reg(src) && !buffer_u8(code, 0x41))
         return false;
 
-    return buffer_u8(code, (uint8_t)(0x50 + low_reg(src)));
+    return buffer_u8(code, (uint8_t)(OPCODE(0x50) + low_reg(src)));
 }
 
 static bool emit_bin_pop_reg(emit_context* emit, reg dst)
@@ -572,10 +574,10 @@ static bool emit_bin_pop_reg(emit_context* emit, reg dst)
     assert(emit);
 
     byte_buffer* code = &get_bin_data(emit)->code;
-    if (high_reg(dst) && !buffer_u8(code, 0x41))
+    if (high_reg(dst) && !buffer_u8(code, OPCODE(0x41)))
         return false;
 
-    return buffer_u8(code, (uint8_t)(0x58 + low_reg(dst)));
+    return buffer_u8(code, (uint8_t)(OPCODE(0x58) + low_reg(dst)));
 }
 
 static bool emit_bin_add_reg_imm(emit_context* emit, reg dst, int32_t imm)
@@ -584,7 +586,7 @@ static bool emit_bin_add_reg_imm(emit_context* emit, reg dst, int32_t imm)
 
     byte_buffer* code = &get_bin_data(emit)->code;
     return emit_rex_force(code, true, REG_RAX, dst) &&
-           buffer_u8(code, 0x81) &&
+           buffer_u8(code, OPCODE(0x81)) &&
            buffer_u8(code, modrm(3, 0, low_reg(dst))) &&
            buffer_i32(code, imm);
 }
@@ -595,7 +597,7 @@ static bool emit_bin_sub_reg_imm(emit_context* emit, reg dst, int32_t imm)
 
     byte_buffer* code = &get_bin_data(emit)->code;
     return emit_rex_force(code, true, REG_RAX, dst) &&
-           buffer_u8(code, 0x81) &&
+           buffer_u8(code, OPCODE(0x81)) &&
            buffer_u8(code, modrm(3, 5, low_reg(dst))) &&
            buffer_i32(code, imm);
 }

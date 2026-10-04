@@ -5,26 +5,16 @@
 #include "frontend_parse.h"
 #include "tree.h"
 
-#ifndef NDEBUG
-static bool write_debug_artifacts(const lexer_result* lexer,
-                                  const parser_result* parser,
-                                  const char* tokens_path,
-                                  const char* serialized_path,
-                                  const char* dot_path)
+static bool write_serialized_tree(const parser_result* parser, const char* serialized_path)
 {
-    FILE* tokens_file = fopen(tokens_path, "w");
-    if (tokens_file != NULL)
+    if (!parser || !serialized_path)
     {
-        dump_lexer_tokens(lexer, tokens_file);
-        fclose(tokens_file);
-    }
-    else
-    {
-        fprintf(stderr, "Warning: failed to open token dump file '%s'\n", tokens_path);
+        fprintf(stderr, "Invalid arguments for tree serialization\n");
+        return false;
     }
 
     FILE* serialized_file = fopen(serialized_path, "w");
-    if (serialized_file == NULL)
+    if (!serialized_file)
     {
         fprintf(stderr, "Failed to open serialized output file '%s'\n", serialized_path);
         return false;
@@ -38,7 +28,28 @@ static bool write_debug_artifacts(const lexer_result* lexer,
     }
 
     fputc('\n', serialized_file);
+
     fclose(serialized_file);
+    return true;
+}
+
+#ifndef NDEBUG
+
+static bool write_debug_artifacts(const lexer_result* lexer,
+                                  const parser_result* parser,
+                                  const char* tokens_path,
+                                  const char* dot_path)
+{
+    FILE* tokens_file = fopen(tokens_path, "w");
+    if (tokens_file)
+    {
+        dump_lexer_tokens(lexer, tokens_file);
+        fclose(tokens_file);
+    }
+    else
+    {
+        fprintf(stderr, "Warning: failed to open token dump file '%s'\n", tokens_path);
+    }
 
     if (!tree_dump_dot(parser->root, dot_path))
     {
@@ -47,14 +58,14 @@ static bool write_debug_artifacts(const lexer_result* lexer,
 
     return true;
 }
+
 #endif
 
 static void print_usage(const char* program_name)
 {
     fprintf(stderr,
             "Usage: %s <input_file> [serialized_tree.txt] [tree.dot] [tokens.txt]\n",
-            program_name != NULL ? program_name : "frontend"
-           );
+            program_name ? program_name : "frontend");
 }
 
 int main(int argc, char* argv[])
@@ -72,6 +83,7 @@ int main(int argc, char* argv[])
 
     lexer_result lexer = {};
     parser_result parser = {};
+
     lexer_result_ctor(&lexer);
     parser_result_ctor(&parser);
 
@@ -81,8 +93,8 @@ int main(int argc, char* argv[])
                 "Lexer error at %d:%d: %s\n",
                 lexer.error_line,
                 lexer.error_column,
-                lexer.error_text[0] != '\0' ? lexer.error_text : "unknown lexer error"
-               );
+                lexer.error_text[0] != '\0' ? lexer.error_text : "unknown lexer error");
+
         lexer_result_reset(&lexer);
         return 2;
     }
@@ -93,24 +105,34 @@ int main(int argc, char* argv[])
                 "Parser error at %d:%d: %s\n",
                 parser.error_line,
                 parser.error_column,
-                parser.error_text[0] != '\0' ? parser.error_text : "unknown parser error"
-               );
+                parser.error_text[0] != '\0' ? parser.error_text : "unknown parser error");
+
         lexer_result_reset(&lexer);
         parser_result_reset(&parser);
         return 3;
     }
 
-#ifndef NDEBUG
-    if (!write_debug_artifacts(&lexer, &parser, tokens_path, serialized_path, dot_path))
+    if (!write_serialized_tree(&parser, serialized_path))
     {
         lexer_result_release_array(&lexer);
         parser_result_reset(&parser);
         return 4;
     }
+
+#ifndef NDEBUG
+
+    if (!write_debug_artifacts(&lexer, &parser, tokens_path, dot_path))
+    {
+        lexer_result_release_array(&lexer);
+        parser_result_reset(&parser);
+        return 5;
+    }
+
 #else
-    (void)serialized_path;
+
     (void)dot_path;
     (void)tokens_path;
+
 #endif
 
     lexer_result_release_array(&lexer);

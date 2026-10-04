@@ -3,7 +3,6 @@
 obj
 *.txt
 *.bin
-*.vdm
 *.asm
 
 !backend/runtime/runtime_syscalls.bin
